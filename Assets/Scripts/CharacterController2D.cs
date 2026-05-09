@@ -2,6 +2,8 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
+using static UnityEditor.PlayerSettings.SplashScreen;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class CharacterController2D : MonoBehaviour
@@ -9,13 +11,19 @@ public class CharacterController2D : MonoBehaviour
     private Rigidbody2D rb2D;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    private Vector2 rawMove = Vector2.zero;
+
     private const float moveThreshold = 0.1f;
 
+    [Header("Movement Settings")]
     [SerializeField] float movementSpeed = 3f;
-    [SerializeField] InputActionReference move;
-    [SerializeField] InputActionReference jump;
-    [SerializeField] InputActionReference punch;
+    [SerializeField] float jumpVelocity = 5f;
+    
+    [Header("Ground Check")]
+    [SerializeField] float groundCheckDistance = 0.2f;
+    [SerializeField] LayerMask groundLayerMask = Physics2D.DefaultRaycastLayers;
+
+    private Vector2 rawMove = Vector2.zero;
+
 
     private void Awake()
     {
@@ -24,41 +32,14 @@ public class CharacterController2D : MonoBehaviour
         this.animator = GetComponent<Animator>();
         this.spriteRenderer = GetComponent<SpriteRenderer>();
 
-        //Así cogemos las acciones del personaje sólo cuando hay alguna interacción por parte del jugador
-        move.action.started += OnMove;
-        move.action.canceled += OnMove;
-        move.action.performed += OnMove;
-        jump.action.started += OnJump;
 
-        punch.action.started += OnPunch;
-    }
-
-    private void OnEnable()
-    {
-        move.action.Enable();
-        jump.action.Enable();
-        punch.action.Enable();
-    }
-
-    private void OnDisable()
-    {
-        move.action.Disable();
-        jump.action.Disable();
-        punch.action.Disable();
-    }
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
         //Movimiento de nuestro personaje
-        this.rb2D.linearVelocity = this.rawMove * this.movementSpeed * Time.deltaTime;
+        this.rb2D.linearVelocityX = this.rawMove.x * this.movementSpeed * Time.deltaTime;
 
         //Determinamos si el personaje tiene que estar corriendo o no:
         bool isMoving = Math.Abs(this.rawMove.x) > moveThreshold;
@@ -70,20 +51,39 @@ public class CharacterController2D : MonoBehaviour
         {
             this.spriteRenderer.flipX = rawMove.x < 0f;
         }
+
+
+        this.animator.SetBool("IsGrounded", IsGrounded());
+
     }
 
-    private void OnMove(InputAction.CallbackContext context)
+    bool IsGrounded()
     {
-        this.rawMove = context.action.ReadValue<Vector2>();
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayerMask);
+
+
+        return hit && (hit.collider != null);
     }
 
-    private void OnJump(InputAction.CallbackContext context)
+    public void SetRawMove(Vector2 rawmove)
     {
-        throw new NotImplementedException();
+        this.rawMove = rawmove;
     }
 
-    private void OnPunch(InputAction.CallbackContext context)
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-        throw new NotImplementedException();
+        
+    }
+
+    internal void Jump()
+    {
+
+        if (IsGrounded())
+        {
+            
+            this.rb2D.linearVelocityY = this.jumpVelocity;
+        }
+
     }
 }
