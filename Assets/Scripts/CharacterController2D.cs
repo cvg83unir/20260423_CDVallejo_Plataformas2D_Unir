@@ -22,7 +22,12 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] float groundCheckDistance = 0.2f;
     [SerializeField] LayerMask groundLayerMask = Physics2D.DefaultRaycastLayers;
 
+    [Header("Combat")]
+    [SerializeField] Transform leftHit;
+    [SerializeField] Transform rightHit;
+
     private Vector2 rawMove = Vector2.zero;
+    const float DEACTIVATE_HIT_DELAY = 0.15F;
 
 
     private void Awake()
@@ -32,6 +37,9 @@ public class CharacterController2D : MonoBehaviour
         this.animator = GetComponent<Animator>();
         this.spriteRenderer = GetComponent<SpriteRenderer>();
 
+        //Desactivamos los gameobject (realmente los transforms) de nuestros hitboxes:
+        this.leftHit.gameObject.SetActive(false);
+        this.rightHit.gameObject.SetActive(false);
 
     }
 
@@ -86,4 +94,34 @@ public class CharacterController2D : MonoBehaviour
         }
 
     }
+
+    internal void Punch()
+    {
+        this.animator.SetTrigger("Punch");
+    }
+
+    public void OnAnimationPunch()
+    {
+        Debug.Log("OnAnimationPunch");
+
+        if (this.spriteRenderer.flipX)
+        {
+            this.leftHit.gameObject.SetActive(true);
+            Invoke(nameof(DeactivateHits), DEACTIVATE_HIT_DELAY);
+        }
+        else
+        {
+            this.rightHit.gameObject.SetActive(true);
+            Invoke(nameof(DeactivateHits), DEACTIVATE_HIT_DELAY);
+        }
+    }
+
+    private void DeactivateHits()
+    {
+        //Desactivamos los gameobject (realmente los transforms) de nuestros hitboxes:
+        this.leftHit.gameObject.SetActive(false);
+        this.rightHit.gameObject.SetActive(false);
+    }
+
+
 }

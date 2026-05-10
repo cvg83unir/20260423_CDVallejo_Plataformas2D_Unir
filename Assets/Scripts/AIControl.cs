@@ -1,10 +1,18 @@
+using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AIControl : MonoBehaviour
 {
     CharacterController2D characterController2D;
 
     [SerializeField] Transform target;
+    [SerializeField] float attackDistance = 2f;
+
+    internal void SetTarget(Transform target)
+    {
+        this.target = target;
+    }
 
     private void Awake()
     {
@@ -30,6 +38,13 @@ public class AIControl : MonoBehaviour
             else
             {
                 rawMove = Vector2.right;
+            }
+
+            //Cuando el enemigo esté lo suficientemente cerca de su objetivo, que se pare y dé puñetazos
+            if(Mathf.Abs(target.transform.position.x - transform.position.x)<attackDistance)
+            {
+                rawMove = Vector2.zero;
+                this.characterController2D.Punch();
             }
 
         }
