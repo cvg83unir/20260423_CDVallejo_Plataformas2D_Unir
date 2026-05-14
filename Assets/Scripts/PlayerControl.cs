@@ -13,6 +13,8 @@ public class PlayerControl : MonoBehaviour
 
     private Vector2 rawMove = Vector2.zero;
 
+    Life life;
+
     private void Awake()
     {
         this.characterController2D = GetComponent<CharacterController2D>();
@@ -24,6 +26,8 @@ public class PlayerControl : MonoBehaviour
         jump.action.started += OnJump;
 
         punch.action.started += OnPunch;
+
+        this.life = GetComponent<Life>();
     }
 
     private void OnEnable()
@@ -31,6 +35,8 @@ public class PlayerControl : MonoBehaviour
         move.action.Enable();
         jump.action.Enable();
         punch.action.Enable();
+
+        this.life.onLifeDepleted.AddListener(OnLifeDepleted);
     }
 
     private void OnDisable()
@@ -38,11 +44,26 @@ public class PlayerControl : MonoBehaviour
         move.action.Disable();
         jump.action.Disable();
         punch.action.Disable();
+
+
+        this.life.onLifeDepleted.RemoveListener(OnLifeDepleted);
+    }
+
+    private void OnLifeDepleted(float arg0)
+    {
+        this.gameObject.SetActive(false);
+        Invoke(nameof(Resurrect), 3f);
+    }
+
+    private void Resurrect()
+    {
+        this.gameObject.SetActive(true);
+        this.life.Restart();
     }
 
     //private void Update()
     //{
-        
+
     //}
 
 
