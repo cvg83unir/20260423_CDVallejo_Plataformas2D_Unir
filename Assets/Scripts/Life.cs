@@ -48,10 +48,9 @@ public class Life : MonoBehaviour
     private void OnHitReceive()
     {
         this.currentLife -= damagePerHit;
-
+        
         if (this.currentLife > 0)
         {
-            this.currentLife -= damagePerHit;
             onLifeChanged.Invoke(this.currentLife, this.startLife);
         }
         else

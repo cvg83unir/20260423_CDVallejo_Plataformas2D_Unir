@@ -13,6 +13,13 @@ public class HitCollider : MonoBehaviour
 
     }
 
+    //private void OnTriggerStay2D(Collider2D elOtro)
+    //{
+    //    HurtCollider hurt = elOtro.GetComponent<HurtCollider>();
+
+    //    hurt?.NotifyHit(this);
+    //}
+
 
 
 
