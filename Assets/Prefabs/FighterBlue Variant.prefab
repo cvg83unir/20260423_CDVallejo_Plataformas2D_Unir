@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FighterBlue Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5194769524995165377, guid: 4e993bd615006434082535276a20b57a, type: 3}
+      propertyPath: movementSpeed
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 6279484161952583493, guid: 4e993bd615006434082535276a20b57a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
