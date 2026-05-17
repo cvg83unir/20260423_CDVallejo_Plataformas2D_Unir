@@ -6283,7 +6283,7 @@ GameObject:
   - component: {fileID: 1489432573}
   - component: {fileID: 1489432572}
   m_Layer: 0
-  m_Name: Background
+  m_Name: TileMapBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7523,7 +7523,7 @@ GameObject:
   - component: {fileID: 1812119549}
   - component: {fileID: 1812119548}
   m_Layer: 3
-  m_Name: Colisiones
+  m_Name: TileMapColisiones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
